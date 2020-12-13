@@ -4,6 +4,11 @@
         "project": "./tsconfig.json"
     },
     "rules": {
+        "@typescript-eslint/consistent-type-definitions": "off",
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "@typescript-eslint/method-signature-style": "off",
+        "@typescript-eslint/return-await": "off",
+        "@typescript-eslint/comma-spacing": "off",
         "@typescript-eslint/no-redeclare": "off"
     }
 }
