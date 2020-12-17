@@ -19,6 +19,11 @@ export const MongoHelper = {
     await collection.deleteMany({})
   },
 
+  mapper (collection: any): any {
+    const { _id, ...collectionWithoutId } = collection
+    return Object.assign({}, collectionWithoutId, { id: _id })
+  },
+
   getCollection (name: string): Collection {
     return this.client.db().collection(name)
   }
