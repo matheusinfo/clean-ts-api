@@ -2,6 +2,10 @@ import { AccountMongoRepository } from './account'
 import { MongoHelper } from '../helper/mongo-helper'
 
 describe('Account Mongo Repository', () => {
+  beforeEach(async () => {
+    await MongoHelper.clean('accounts')
+  })
+
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
   })
