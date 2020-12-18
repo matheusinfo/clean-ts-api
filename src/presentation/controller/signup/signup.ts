@@ -1,5 +1,5 @@
 import { HttpRequest, HttpResponse, Controller, EmailValidator, AddAccount } from './signup-protocols'
-import { MissingParamError, InvalidParamError } from '../../errors'
+import { MissingParamError, InvalidParamError, LengthError } from '../../errors'
 import { badRequest, serverError, success } from '../../helpers/http-helper'
 
 export class SignUpController implements Controller {
@@ -19,6 +19,9 @@ export class SignUpController implements Controller {
         }
       }
       const { name, email, password, passwordConfirmation } = httpRequest.body
+      if (password.length <= 4) {
+        return badRequest(new LengthError('password'))
+      }
       if (password !== passwordConfirmation) {
         return badRequest(new InvalidParamError('passwordConfirmation'))
       }
