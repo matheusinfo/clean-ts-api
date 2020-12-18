@@ -19,7 +19,7 @@ export class SignUpController implements Controller {
         }
       }
       const { name, email, password, passwordConfirmation } = httpRequest.body
-      if (password.length <= 4) {
+      if (password.length < 4) {
         return badRequest(new LengthError('password'))
       }
       if (password !== passwordConfirmation) {

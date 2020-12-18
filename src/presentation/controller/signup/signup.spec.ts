@@ -127,14 +127,14 @@ describe('SignUp Controlller', () => {
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('passwordConfirmation')))
   })
 
-  it('Should return password with less than 3 characters is provided', async () => {
+  it('Should return password with less than 4 characters is provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
         name: 'any_name',
-        password: 'any',
+        password: '123',
         email: 'any_email@mail.com',
-        passwordConfirmation: 'any'
+        passwordConfirmation: '123'
       }
     }
     const httpResponse = await sut.handle(httpRequest)
