@@ -134,7 +134,7 @@ describe('SignUp Controlller', () => {
         name: 'any_name',
         password: '123',
         email: 'any_email@mail.com',
-        passwordConfirmation: '123'
+        passwordConfirmation: '1234'
       }
     }
     const httpResponse = await sut.handle(httpRequest)
