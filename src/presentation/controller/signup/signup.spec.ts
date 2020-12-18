@@ -1,6 +1,6 @@
 import { SignUpController } from './signup'
 import { EmailValidator, AddAccountModel, AddAccount, AccountModel } from './signup-protocols'
-import { MissingParamError, InvalidParamError } from '../../errors'
+import { MissingParamError, InvalidParamError, LengthError } from '../../errors'
 import { badRequest, serverError, success } from '../../helpers/http-helper'
 
 const makeAddAccount = (): AddAccount => {
@@ -125,6 +125,20 @@ describe('SignUp Controlller', () => {
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('passwordConfirmation')))
+  })
+
+  it('Should return password with less than 3 characters is provided', async () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        password: 'any',
+        email: 'any_email@mail.com',
+        passwordConfirmation: 'any'
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new LengthError('password')))
   })
 
   it('Should call EmailValidator with correct email',async () => {
