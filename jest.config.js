@@ -9,7 +9,7 @@ module.exports = {
     '**/test/**'
   ],
   coverageDirectory: 'coverage',
-  coverageProvider: 'v8',
+  coverageProvider: 'babel',
   testEnvironment: 'node',
   preset: '@shelf/jest-mongodb',
   transform: {
