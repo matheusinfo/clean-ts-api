@@ -1,5 +1,5 @@
 import { LengthError } from '../../errors'
-import { Validation } from './validation'
+import { Validation } from '../../protocols/validation'
 
 export class LengthField implements Validation {
   private readonly fieldName: string
