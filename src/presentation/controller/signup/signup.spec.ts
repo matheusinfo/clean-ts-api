@@ -1,6 +1,6 @@
 import { SignUpController } from './signup'
 import { AddAccountModel, AddAccount, AccountModel, Validation } from './signup-protocols'
-import { badRequest, serverError, success } from '../../helpers/http-helper'
+import { badRequest, serverError, success } from '../../helpers/http/http-helper'
 import { HttpRequest } from '../../protocols'
 
 const makeValidation = (): Validation => {
