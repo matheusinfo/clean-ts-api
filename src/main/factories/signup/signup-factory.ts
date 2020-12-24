@@ -3,7 +3,7 @@ import { SignUpController } from '../../../presentation/controller/signup/signup
 import { DbAddAccount } from '../../../data/usecases/add-account/db-add-account'
 import { BcryptAdapter } from '../../../infra/criptography/bcrypt-adapter/bcrypt-adapter'
 import { AccountMongoRepository } from '../../../infra/db/mongodb/account/account-mongo-repository'
-import { LogMongoRepository } from '../../../infra/db/mongodb/log/log-repository'
+import { LogMongoRepository } from '../../../infra/db/mongodb/log/log-mongo-repository'
 import { LogControllerDecorator } from '../../decorators/log-controller-decorator'
 import { makeSignUpValidation } from './signup-validation-factory'
 
