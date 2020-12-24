@@ -1,4 +1,4 @@
-import { LogMongoRepository } from './log'
+import { LogMongoRepository } from './log-repository'
 import { MongoHelper } from '../helper/mongo-helper'
 
 const makeSut = (): LogMongoRepository => {
