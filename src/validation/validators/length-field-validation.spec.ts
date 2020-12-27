@@ -1,4 +1,4 @@
-import { LengthError } from '../../errors'
+import { LengthError } from '../../presentation/errors'
 import { LengthField } from './length-field-validation'
 
 const makeSut = (): LengthField => {
