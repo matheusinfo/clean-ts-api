@@ -1,7 +1,8 @@
 import { SignUpController } from './signup-controller'
 import { AddAccountModel, AddAccount, AccountModel, Validation, Authentication, AuthenticationModel } from './signup-controller-protocols'
-import { badRequest, serverError, success } from '../../helpers/http/http-helper'
+import { badRequest, serverError, forbidden ,success } from '../../helpers/http/http-helper'
 import { HttpRequest } from '../../protocols'
+import { EmailInUseError } from '../../errors'
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
@@ -85,6 +86,14 @@ describe('SignUp Controlller', () => {
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  it('Should return 403 if email already exists', async () => {
+    const { sut, addAccountStub } = makeSut()
+    jest.spyOn(addAccountStub, 'add').mockReturnValueOnce(null)
+    const httpRequest = makeFakeRequest()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(forbidden(new EmailInUseError()))
   })
 
   it('Should return 200 on success', async () => {
