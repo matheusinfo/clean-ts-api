@@ -2,6 +2,10 @@ import { Collection } from 'mongodb'
 import { AccountMongoRepository } from './account-mongo-repository'
 import { MongoHelper } from '../helper/mongo-helper'
 
+const makeSut = (): AccountMongoRepository => {
+  return new AccountMongoRepository()
+}
+
 describe('Account Mongo Repository', () => {
   let accountCollection: Collection
 
@@ -17,10 +21,6 @@ describe('Account Mongo Repository', () => {
   afterAll(async () => {
     await MongoHelper.disconnect()
   })
-
-  const makeSut = (): AccountMongoRepository => {
-    return new AccountMongoRepository()
-  }
 
   it('Should return an account on add success', async () => {
     const sut = makeSut()
