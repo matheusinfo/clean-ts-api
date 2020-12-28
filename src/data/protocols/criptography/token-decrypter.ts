@@ -1,3 +1,3 @@
 export interface TokenDecrypter {
-  decrypt (value: string): Promise<string>
+  decrypt (token: string): Promise<string>
 }
