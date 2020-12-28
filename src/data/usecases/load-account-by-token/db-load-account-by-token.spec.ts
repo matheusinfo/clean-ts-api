@@ -60,14 +60,14 @@ describe('DbLoadAccountByToken Usecase', () => {
     expect(account).toBeNull()
   })
 
-  it('Should call LocadAccountByTokenRepository with correct values', async () => {
+  it('Should call LoadAccountByTokenRepository with correct values', async () => {
     const { sut, loadAccountByTokenRepositoryStub } = makeSut()
     const loadByTokenSpy = jest.spyOn(loadAccountByTokenRepositoryStub, 'loadByToken')
     await sut.load('any_token', 'any_role')
     expect(loadByTokenSpy).toHaveBeenCalledWith('any_token', 'any_role')
   })
 
-  it('Should return null if LocadAccountByTokenRepository returns null', async () => {
+  it('Should return null if LoadAccountByTokenRepository returns null', async () => {
     const { sut, loadAccountByTokenRepositoryStub } = makeSut()
     jest.spyOn(loadAccountByTokenRepositoryStub, 'loadByToken').mockReturnValueOnce(null)
     const account = await sut.load('any_token', 'any_role')
@@ -87,7 +87,7 @@ describe('DbLoadAccountByToken Usecase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  it('Shoudl throw if LocadAccountByTokenRepository throws', async () => {
+  it('Shoudl throw if LoadAccountByTokenRepository throws', async () => {
     const { sut, loadAccountByTokenRepositoryStub } = makeSut()
     jest.spyOn(loadAccountByTokenRepositoryStub, 'loadByToken').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const promise = sut.load('any_token', 'any_role')
