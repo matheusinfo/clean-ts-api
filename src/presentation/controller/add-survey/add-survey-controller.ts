@@ -4,7 +4,7 @@ import { badRequest, noContent, serverError } from '../../helpers/http/http-help
 export class AddSurveyController implements Controller {
   constructor (
     private readonly validation: Validation,
-    private readonly addSurveyStub: AddSurvey
+    private readonly addSurvey: AddSurvey
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -14,9 +14,10 @@ export class AddSurveyController implements Controller {
         return badRequest(error)
       }
       const { question, answers } = httpRequest.body
-      await this.addSurveyStub.add({
+      await this.addSurvey.add({
         question,
-        answers
+        answers,
+        date: new Date()
       })
       return noContent()
     } catch (error) {
