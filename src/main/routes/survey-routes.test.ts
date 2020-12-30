@@ -5,10 +5,30 @@ import { sign } from 'jsonwebtoken'
 import app from '../config/app'
 import { MongoHelper } from '../../infra/db/mongodb/helper/mongo-helper'
 
-describe('Login Routes', () => {
-  let accountCollection: Collection
-  let surveyCollection: Collection
+let accountCollection: Collection
+let surveyCollection: Collection
 
+const makeAccessToken = async (): Promise<string> => {
+  const result = await accountCollection.insertOne({
+    name: 'Matheus',
+    email: 'matheus@gmail.com',
+    password: '1234',
+    passwordConfirmation: '1234',
+    role: 'admin'
+  })
+  const id = result.ops[0]._id
+  const accessToken = sign({ id }, env.secret)
+  await accountCollection.updateOne({
+    _id: id
+  }, {
+    $set: {
+      accessToken
+    }
+  })
+  return accessToken
+}
+
+describe('Login Routes', () => {
   beforeEach(async () => {
     accountCollection = await MongoHelper.getCollection('accounts')
     surveyCollection = await MongoHelper.getCollection('surveys')
@@ -41,22 +61,7 @@ describe('Login Routes', () => {
     })
 
     it('Should return 204 on add survey success', async () => {
-      const result = await accountCollection.insertOne({
-        name: 'Matheus',
-        email: 'matheus@gmail.com',
-        password: '1234',
-        passwordConfirmation: '1234',
-        role: 'admin'
-      })
-      const id = result.ops[0]._id
-      const accessToken = sign({ id }, env.secret)
-      await accountCollection.updateOne({
-        _id: id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await makeAccessToken()
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -81,29 +86,13 @@ describe('Login Routes', () => {
     })
 
     it('Should return 200 on load surveys success with no content', async () => {
-      const result = await accountCollection.insertOne({
-        name: 'Matheus',
-        email: 'matheus@gmail.com',
-        password: '1234',
-        passwordConfirmation: '1234',
-        role: 'admin'
-      })
-      const id = result.ops[0]._id
-      const accessToken = sign({ id }, env.secret)
-      await accountCollection.updateOne({
-        _id: id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await makeAccessToken()
       await surveyCollection.insertMany([{
         question: 'any_question',
         answers: [{
           answer: 'any_answer',
           image: 'any_image'
-        }],
-        date: new Date()
+        }]
       }])
       await request(app)
         .get('/api/surveys')
@@ -112,22 +101,7 @@ describe('Login Routes', () => {
     })
 
     it('Should return 204 on load surveys success with no content', async () => {
-      const result = await accountCollection.insertOne({
-        name: 'Matheus',
-        email: 'matheus@gmail.com',
-        password: '1234',
-        passwordConfirmation: '1234',
-        role: 'admin'
-      })
-      const id = result.ops[0]._id
-      const accessToken = sign({ id }, env.secret)
-      await accountCollection.updateOne({
-        _id: id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await makeAccessToken()
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', accessToken)
