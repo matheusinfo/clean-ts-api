@@ -1,5 +1,5 @@
-import { LengthError } from '../../presentation/errors'
-import { Validation } from '../../presentation/protocols'
+import { LengthError } from '@/presentation/errors'
+import { Validation } from '@/presentation/protocols'
 
 export class LengthField implements Validation {
   constructor (
