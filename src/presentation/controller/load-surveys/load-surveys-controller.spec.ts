@@ -1,7 +1,7 @@
 import MockDate from 'mockdate'
 import { LoadSurveysController } from './load-surveys-controller'
 import { LoadSurveys, SurveyModel } from './load-surveys-protocols'
-import { serverError, success } from '../../helpers/http/http-helper'
+import { noContent, serverError, success } from '../../helpers/http/http-helper'
 
 const makeLoadSurveys = (): LoadSurveys => {
   class LoadSurveysStub implements LoadSurveys {
@@ -66,6 +66,13 @@ describe('LoadSurveys Controller', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(success(makeFakeSurveys()))
+  })
+
+  it('Should return 204 if LoadSurveysReturn empty', async () => {
+    const { sut, loadSurveysStub } = makeSut()
+    jest.spyOn(loadSurveysStub, 'load').mockReturnValueOnce(new Promise(resolve => resolve([])))
+    const httpResponse = await sut.handle({})
+    expect(httpResponse).toEqual(noContent())
   })
 
   it('Should return 500 if LoadSurveys throws', async () => {
