@@ -6,6 +6,7 @@ import { AccountModel } from '@/domain/models/account'
 
 let surveyCollection: Collection
 let accountCollection: Collection
+let surveyResultCollection: Collection
 
 const makeAccount = async (): Promise<AccountModel> => {
   const result = await accountCollection.insertOne({
@@ -42,6 +43,8 @@ describe('Account Mongo Repository', () => {
     await MongoHelper.clean('surveys')
     accountCollection = await MongoHelper.getCollection('accounts')
     await MongoHelper.clean('accounts')
+    surveyResultCollection = await MongoHelper.getCollection('surveyResults')
+    await MongoHelper.clean('surveyResults')
   })
 
   beforeAll(async () => {
@@ -66,6 +69,27 @@ describe('Account Mongo Repository', () => {
       expect(surveyResult).toBeTruthy()
       expect(surveyResult.id).toBeTruthy()
       expect(surveyResult.answer).toBe(survey.answers[0].answer)
+    })
+
+    it('Should update a survey result if its not new', async () => {
+      const sut = makeSut()
+      const survey = await makeSurvey()
+      const account = await makeAccount()
+      const result = await surveyResultCollection.insertOne({
+        surveyId: survey.id,
+        accountId: account.id,
+        answer: survey.answers[0].answer,
+        date: new Date()
+      })
+      const surveyResult = await sut.save({
+        surveyId: survey.id,
+        accountId: account.id,
+        answer: survey.answers[1].answer,
+        date: new Date()
+      })
+      expect(surveyResult).toBeTruthy()
+      expect(surveyResult.id).toEqual(result.ops[0]._id)
+      expect(surveyResult.answer).toBe(survey.answers[1].answer)
     })
   })
 })
