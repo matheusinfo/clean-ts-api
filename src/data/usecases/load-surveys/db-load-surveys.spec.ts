@@ -2,15 +2,6 @@ import MockDate from 'mockdate'
 import { DbLoadSurveys } from './db-load-suveys'
 import { SurveyModel, LoadSurveysRepository } from './db-load-surveys-protocols'
 
-const makeLoadSurveysRepository = (): LoadSurveysRepository => {
-  class LoadSurveysRepositoryStub implements LoadSurveysRepository {
-    async loadAll (): Promise<SurveyModel[]> {
-      return makeFakeSurveys()
-    }
-  }
-  return new LoadSurveysRepositoryStub()
-}
-
 const makeFakeSurveys = (): SurveyModel[] => {
   return [{
     id: 'any_id',
@@ -29,6 +20,15 @@ const makeFakeSurveys = (): SurveyModel[] => {
     }],
     date: new Date()
   }]
+}
+
+const makeLoadSurveysRepository = (): LoadSurveysRepository => {
+  class LoadSurveysRepositoryStub implements LoadSurveysRepository {
+    async loadAll (): Promise<SurveyModel[]> {
+      return makeFakeSurveys()
+    }
+  }
+  return new LoadSurveysRepositoryStub()
 }
 
 type SutTypes = {
