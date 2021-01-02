@@ -27,6 +27,10 @@ export const MongoHelper = {
     return Object.assign({}, collectionWithoutId, { id: _id })
   },
 
+  mapperCollection (collection: any[]): any[] {
+    return collection.map(item => MongoHelper.mapper(item))
+  },
+
   async getCollection (name: string): Promise<Collection> {
     if (!this.client?.isConnected()) {
       await this.connect(this.uri)
