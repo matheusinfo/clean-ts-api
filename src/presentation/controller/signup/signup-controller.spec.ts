@@ -1,42 +1,9 @@
 import { SignUpController } from './signup-controller'
-import { AddAccountParams, AddAccount, AccountModel, Validation, Authentication, AuthenticationParams } from './signup-controller-protocols'
+import { AddAccount, Validation, Authentication } from './signup-controller-protocols'
 import { badRequest, serverError, forbidden ,success } from '@/presentation/helpers/http/http-helper'
 import { HttpRequest } from '@/presentation/protocols'
 import { EmailInUseError } from '@/presentation/errors'
-
-const makeAuthentication = (): Authentication => {
-  class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationParams): Promise<string> {
-      return 'any_token'
-    }
-  }
-  return new AuthenticationStub()
-}
-
-const makeValidation = (): Validation => {
-  class ValidationStub implements Validation {
-    validate (input: any): Error {
-      return null
-    }
-  }
-  return new ValidationStub()
-}
-
-const makeAddAccount = (): AddAccount => {
-  class AddAccountStub implements AddAccount {
-    async add (account: AddAccountParams): Promise<AccountModel> {
-      return makeFakeAccount()
-    }
-  }
-  return new AddAccountStub()
-}
-
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  name: 'valid_name',
-  email: 'valid_email@mail.com',
-  password: 'valid_password'
-})
+import { mockValidation, mockAuthentication, mockAddAccount } from '@/presentation/test'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
@@ -55,9 +22,9 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const authenticationStub = makeAuthentication()
-  const addAccountStub = makeAddAccount()
-  const validationStub = makeValidation()
+  const authenticationStub = mockAuthentication()
+  const addAccountStub = mockAddAccount()
+  const validationStub = mockValidation()
   const sut = new SignUpController(addAccountStub, validationStub, authenticationStub)
   return {
     sut,
