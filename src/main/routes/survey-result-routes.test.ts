@@ -27,7 +27,7 @@ const makeAccessToken = async (): Promise<string> => {
   return accessToken
 }
 
-describe('Login Routes', () => {
+describe('Survey Routes', () => {
   beforeEach(async () => {
     accountCollection = await MongoHelper.getCollection('accounts')
     surveyCollection = await MongoHelper.getCollection('surveys')
