@@ -1,40 +1,47 @@
-import { HashComparer } from '@/data/protocols/criptography/hash-comparer'
+import faker from 'faker'
 import { Hasher } from '@/data/protocols/criptography/hasher'
-import { TokenDecrypter } from '@/data/protocols/criptography/token-decrypter'
 import { TokenEncrypter } from '@/data/protocols/criptography/token-encrypter'
+import { TokenDecrypter } from '@/data/protocols/criptography/token-decrypter'
+import { HashComparer } from '@/data/protocols/criptography/hash-comparer'
 
-export const mockHasher = (): Hasher => {
-  class HasherStub implements Hasher {
-    async hash (value: string): Promise<string> {
-      return 'hashed_password'
-    }
+export class HasherSpy implements Hasher {
+  plaintext = faker.random.uuid()
+  value: string
+
+  async hash (value: string): Promise<string> {
+    this.value = value
+    return this.plaintext
   }
-  return new HasherStub()
 }
 
-export const mockTokenDecrypter = (): TokenDecrypter => {
-  class TokenDecrypterStub implements TokenDecrypter {
-    async decrypt (token: string): Promise<string> {
-      return 'any_value'
-    }
+export class TokenEncrypterSpy implements TokenEncrypter {
+  ciphertext = faker.random.uuid()
+  id: string
+
+  async encrypt (id: string): Promise<string> {
+    this.id = id
+    return this.ciphertext
   }
-  return new TokenDecrypterStub()
 }
 
-export const mockTokenEncrypter = (): TokenEncrypter => {
-  class TokenEncrypterStub implements TokenEncrypter {
-    async encrypt (id: string): Promise<string> {
-      return 'any_token'
-    }
+export class TokenDecrypterSpy implements TokenDecrypter {
+  plaintext = faker.random.uuid()
+  token: string
+
+  async decrypt (token: string): Promise<string> {
+    this.token = token
+    return this.plaintext
   }
-  return new TokenEncrypterStub()
 }
 
-export const mockHashComparer = (): HashComparer => {
-  class HashComparerStub implements HashComparer {
-    async compare (value: string, hash: string): Promise<boolean> {
-      return true
-    }
+export class HashComparerSpy implements HashComparer {
+  value: string
+  hash: string
+  isValid = true
+
+  async compare (value: string, hash: string): Promise<boolean> {
+    this.value = value
+    this.hash = hash
+    return this.isValid
   }
-  return new HashComparerStub()
 }

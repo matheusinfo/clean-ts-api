@@ -1,31 +1,32 @@
-import { LoadSurveyByIdRepository } from '@/data/protocols/db/survey/load-survey-by-id-repository'
 import { AddSurveyRepository } from '@/data/usecases/survey/add-survey/db-add-survey-protocols'
+import { LoadSurveyByIdRepository } from '@/data/protocols/db/survey/load-survey-by-id-repository'
+import { LoadSurveysRepository } from '@/data/protocols/db/survey/load-surveys-repository'
 import { AddSurveyParams } from '@/domain/usecases/survey/add-survey'
 import { SurveyModel } from '@/domain/models/survey'
-import { LoadSurveysRepository } from '../protocols/db/survey/load-surveys-repository'
 import { mockSurveyModel, mockSurveysModel } from '@/domain/test'
 
-export const mockAddSurveyRepository = (): AddSurveyRepository => {
-  class AddSurveyRepositoryStub implements AddSurveyRepository {
-    async add (surveyData: AddSurveyParams): Promise<void> {}
+export class AddSurveyRepositorySpy implements AddSurveyRepository {
+  addSurveyParams: AddSurveyParams
+
+  async add (surveyData: AddSurveyParams): Promise<void> {
+    this.addSurveyParams = surveyData
   }
-  return new AddSurveyRepositoryStub()
 }
 
-export const mockLoadSurveyByIdRepository = (): LoadSurveyByIdRepository => {
-  class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository {
-    async loadById (): Promise<SurveyModel> {
-      return mockSurveyModel()
-    }
+export class LoadSurveyByIdRepositorySpy implements LoadSurveyByIdRepository {
+  surveyModel = mockSurveyModel()
+  id: string
+
+  async loadById (id: string): Promise<SurveyModel> {
+    this.id = id
+    return this.surveyModel
   }
-  return new LoadSurveyByIdRepositoryStub()
 }
 
-export const mockLoadSurveysRepository = (): LoadSurveysRepository => {
-  class LoadSurveysRepositoryStub implements LoadSurveysRepository {
-    async loadAll (): Promise<SurveyModel[]> {
-      return mockSurveysModel()
-    }
+export class LoadSurveysRepositorySpy implements LoadSurveysRepository {
+  surveysModels = mockSurveysModel()
+
+  async loadAll (): Promise<SurveyModel[]> {
+    return this.surveysModels
   }
-  return new LoadSurveysRepositoryStub()
 }

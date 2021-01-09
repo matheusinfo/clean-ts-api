@@ -1,20 +1,19 @@
 import MockDate from 'mockdate'
 import { DbAddSurvey } from './db-add-survey'
-import { AddSurveyRepository } from './db-add-survey-protocols'
 import { throwError, mockAddSurveyParams } from '@/domain/test'
-import { mockAddSurveyRepository } from '@/data/test'
+import { AddSurveyRepositorySpy } from '@/data/test'
 
 type SutTypes = {
   sut: DbAddSurvey
-  addSurveyRepositoryStub: AddSurveyRepository
+  addSurveyRepositorySpy: AddSurveyRepositorySpy
 }
 
 const makeSut = (): SutTypes => {
-  const addSurveyRepositoryStub = mockAddSurveyRepository()
-  const sut = new DbAddSurvey(addSurveyRepositoryStub)
+  const addSurveyRepositorySpy = new AddSurveyRepositorySpy()
+  const sut = new DbAddSurvey(addSurveyRepositorySpy)
   return {
     sut,
-    addSurveyRepositoryStub
+    addSurveyRepositorySpy
   }
 }
 
@@ -28,16 +27,15 @@ describe('DbAddSurvey Usecase', () => {
   })
 
   it('Should call AddSurveyRepository with correct values', async () => {
-    const { sut, addSurveyRepositoryStub } = makeSut()
-    const addSpy = jest.spyOn(addSurveyRepositoryStub, 'add')
+    const { sut, addSurveyRepositorySpy } = makeSut()
     const surveyData = mockAddSurveyParams()
     await sut.add(surveyData)
-    expect(addSpy).toHaveBeenCalledWith(surveyData)
+    expect(addSurveyRepositorySpy.addSurveyParams).toBe(surveyData)
   })
 
   it('Should throw if AddSurveyRepository throws', async () => {
-    const { sut, addSurveyRepositoryStub } = makeSut()
-    jest.spyOn(addSurveyRepositoryStub, 'add').mockImplementationOnce(throwError)
+    const { sut, addSurveyRepositorySpy } = makeSut()
+    jest.spyOn(addSurveyRepositorySpy, 'add').mockImplementationOnce(throwError)
     const surveyData = mockAddSurveyParams()
     const promise = sut.add(surveyData)
     await expect(promise).rejects.toThrow()

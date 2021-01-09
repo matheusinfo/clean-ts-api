@@ -1,11 +1,12 @@
 import { AccountModel, AddAccount, AddAccountParams } from '@/presentation/controller/signup/signup-controller-protocols'
 import { mockAccountModel } from '@/domain/test'
 
-export const mockAddAccount = (): AddAccount => {
-  class AddAccountStub implements AddAccount {
-    async add (account: AddAccountParams): Promise<AccountModel> {
-      return mockAccountModel()
-    }
+export class AddAccountSpy implements AddAccount {
+  accountModel = mockAccountModel()
+  addAccountParams: AddAccountParams
+
+  async add (account: AddAccountParams): Promise<AccountModel> {
+    this.addAccountParams = account
+    return this.accountModel
   }
-  return new AddAccountStub()
 }
