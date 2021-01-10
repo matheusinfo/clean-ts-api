@@ -15,12 +15,14 @@ export const mockSaveSurveyResultModel = (): SurveyResultModel => ({
   answers: [{
     answer: faker.random.word(),
     count: faker.random.number({ min: 0, max: 1000 }),
-    percent: faker.random.number({ min: 0, max: 100 })
+    percent: faker.random.number({ min: 0, max: 100 }),
+    isCurrentAccountAnswer: faker.random.boolean()
   }, {
     answer: faker.random.word(),
     image: faker.image.imageUrl(),
     count: faker.random.number({ min: 0, max: 1000 }),
-    percent: faker.random.number({ min: 0, max: 100 })
+    percent: faker.random.number({ min: 0, max: 100 }),
+    isCurrentAccountAnswer: faker.random.boolean()
   }],
   date: faker.date.recent()
 })

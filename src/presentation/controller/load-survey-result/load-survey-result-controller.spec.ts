@@ -1,3 +1,4 @@
+import faker from 'faker'
 import MockDate from 'mockdate'
 import { LoadSurveyResultController } from './load-survey-result-controller'
 import { HttpRequest } from './load-survey-result-controller-protocols'
@@ -7,8 +8,9 @@ import { InvalidParamError } from '@/presentation/errors'
 import { throwError } from '@/domain/test'
 
 const mockRequest = (): HttpRequest => ({
+  accountId: faker.random.uuid(),
   params: {
-    surveyId: 'any_id'
+    surveyId: faker.random.uuid()
   }
 })
 
@@ -40,10 +42,17 @@ describe('', () => {
 
   it('Should call LoadSurveyById with correct value', async () => {
     const { sut, loadSurveyByIdSpy } = makeSut()
-    const loadByIdSpy = jest.spyOn(loadSurveyByIdSpy, 'loadById')
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
-    expect(loadByIdSpy).toHaveBeenCalledWith('any_id')
+    expect(loadSurveyByIdSpy.id).toBe(httpRequest.params.surveyId)
+  })
+
+  it('Shoudl call LoadSurveyResult with correct values', async () => {
+    const { sut, loadSurveyResultSpy } = makeSut()
+    const httpRequest = mockRequest()
+    await sut.handle(httpRequest)
+    expect(loadSurveyResultSpy.surveyId).toBe(httpRequest.params.surveyId)
+    expect(loadSurveyResultSpy.accountId).toBe(httpRequest.accountId)
   })
 
   it('Should return 403 if LoadSurveyById returns null', async () => {
@@ -60,14 +69,6 @@ describe('', () => {
     const httpRequest = mockRequest()
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(serverError(new Error()))
-  })
-
-  it('Shoudl call LoadSurveyResult with correct value', async () => {
-    const { sut, loadSurveyResultSpy } = makeSut()
-    const loadSpy = jest.spyOn(loadSurveyResultSpy, 'load')
-    const httpRequest = mockRequest()
-    await sut.handle(httpRequest)
-    expect(loadSpy).toHaveBeenCalledWith('any_id')
   })
 
   it('Should return 500 if LoadSurveyById throws', async () => {

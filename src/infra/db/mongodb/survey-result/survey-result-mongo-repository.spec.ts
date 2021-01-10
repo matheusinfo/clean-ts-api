@@ -106,6 +106,7 @@ describe('Account Mongo Repository', () => {
       const sut = makeSut()
       const survey = await makeSurvey()
       const account = await makeAccount()
+      const account2 = await makeAccount()
       await surveyResultCollection.insertMany([{
         surveyId: new ObjectId(survey.id),
         accountId: new ObjectId(account.id),
@@ -118,24 +119,27 @@ describe('Account Mongo Repository', () => {
         date: new Date()
       },{
         surveyId: new ObjectId(survey.id),
-        accountId: new ObjectId(account.id),
+        accountId: new ObjectId(account2.id),
         answer: survey.answers[1].answer,
         date: new Date()
       },{
         surveyId: new ObjectId(survey.id),
-        accountId: new ObjectId(account.id),
+        accountId: new ObjectId(account2.id),
         answer: survey.answers[2].answer,
         date: new Date()
       }])
-      const surveyResult = await sut.loadBySurveyId(survey.id)
+      const surveyResult = await sut.loadBySurveyId(survey.id, account.id)
       expect(surveyResult).toBeTruthy()
       expect(surveyResult.surveyId).toEqual(survey.id)
       expect(surveyResult.answers[0].count).toBe(2)
       expect(surveyResult.answers[0].percent).toBe(50)
+      expect(surveyResult.answers[0].isCurrentAccountAnswer).toBe(true)
       expect(surveyResult.answers[1].count).toBe(1)
       expect(surveyResult.answers[1].percent).toBe(25)
+      expect(surveyResult.answers[1].isCurrentAccountAnswer).toBe(false)
       expect(surveyResult.answers[2].count).toBe(1)
       expect(surveyResult.answers[2].percent).toBe(25)
+      expect(surveyResult.answers[2].isCurrentAccountAnswer).toBe(false)
     })
   })
 })
