@@ -4,8 +4,10 @@ import { LoadSurveyById } from '../controller/survey-result/save-survey-result-c
 
 export class LoadSurveysSpy implements LoadSurveys {
   surveyModel = mockSurveysModel()
+  accountId: string
 
-  async load (): Promise<SurveyModel[]> {
+  async load (accountId: string): Promise<SurveyModel[]> {
+    this.accountId = accountId
     return this.surveyModel
   }
 }

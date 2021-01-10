@@ -1,3 +1,4 @@
+import faker from 'faker'
 import MockDate from 'mockdate'
 import { DbLoadSurveys } from './db-load-suveys'
 import { throwError } from '@/domain/test'
@@ -28,21 +29,21 @@ describe('DbLoadSurveys', () => {
 
   it('Should call LoadSurveysRepository', async () => {
     const { sut, loadSurveysRepositorySpy } = makeSut()
-    const loadAllSpy = jest.spyOn(loadSurveysRepositorySpy, 'loadAll')
-    await sut.load()
-    expect(loadAllSpy).toHaveBeenCalled()
+    const accountId = faker.random.uuid()
+    await sut.load(accountId)
+    expect(loadSurveysRepositorySpy.accountId).toBe(accountId)
   })
 
   it('Should return a list of surveys on success', async () => {
     const { sut, loadSurveysRepositorySpy } = makeSut()
-    const surveys = await sut.load()
+    const surveys = await sut.load(faker.random.uuid())
     expect(surveys).toEqual(loadSurveysRepositorySpy.surveysModels)
   })
 
   it('Shoudl throw if LoadSurveysRepository throws', async () => {
     const { sut, loadSurveysRepositorySpy } = makeSut()
     jest.spyOn(loadSurveysRepositorySpy, 'loadAll').mockImplementationOnce(throwError)
-    const promise = sut.load()
+    const promise = sut.load(faker.random.uuid())
     await expect(promise).rejects.toThrow()
   })
 })
