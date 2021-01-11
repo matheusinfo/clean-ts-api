@@ -1,15 +1,16 @@
-import { SignUpController } from '@/presentation/controllers'
+import faker from 'faker'
 import { badRequest, serverError, forbidden ,success } from '@/presentation/helpers/http/http-helper'
+import { SignUpController } from '@/presentation/controllers'
 import { HttpRequest } from '@/presentation/protocols'
 import { EmailInUseError } from '@/presentation/errors'
-import { ValidationSpy, AuthenticationSpy, AddAccountSpy } from '@/../tests/presentation/mocks'
+import { ValidationSpy, AuthenticationSpy, AddAccountSpy } from '@/tests/presentation/mocks'
 
 const mockRequest = (): HttpRequest => ({
   body: {
-    name: 'any_name',
-    email: 'any_email@mail.com',
-    password: 'any_password',
-    passwordConfirmation: 'any_password'
+    name,
+    email,
+    password,
+    passwordConfirmation: password
   }
 })
 
@@ -33,16 +34,26 @@ const makeSut = (): SutTypes => {
   }
 }
 
+let name: string
+let email: string
+let password: string
+
 describe('SignUp Controlller', () => {
+  beforeEach(() => {
+    name = faker.name.findName()
+    email = faker.internet.email()
+    password = faker.internet.password()
+  })
+
   it('Should call AddAccount with correct values', async () => {
     const { sut, addAccountSpy } = makeSut()
     const addSpy = jest.spyOn(addAccountSpy, 'add')
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
     expect(addSpy).toHaveBeenCalledWith({
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'any_password'
+      name,
+      email,
+      password
     })
   })
 
@@ -91,8 +102,8 @@ describe('SignUp Controlller', () => {
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
     expect(authSpy).toHaveBeenCalledWith({
-      email: 'any_email@mail.com',
-      password: 'any_password'
+      email,
+      password
     })
   })
 

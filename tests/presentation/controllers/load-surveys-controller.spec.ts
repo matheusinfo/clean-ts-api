@@ -1,10 +1,10 @@
 import faker from 'faker'
 import MockDate from 'mockdate'
-import { LoadSurveysController } from '@/presentation/controllers'
 import { noContent, serverError, success } from '@/presentation/helpers/http/http-helper'
-import { throwError } from '@/../tests/domain/mocks'
-import { LoadSurveysSpy } from '@/../tests/presentation/mocks'
-import { HttpRequest } from '../protocols'
+import { LoadSurveysController } from '@/presentation/controllers'
+import { HttpRequest } from '@/presentation/protocols'
+import { throwError } from '@/tests/domain/mocks'
+import { LoadSurveysSpy } from '@/tests/presentation/mocks'
 
 const mockRequest = (): HttpRequest => ({
   accountId: faker.random.uuid()

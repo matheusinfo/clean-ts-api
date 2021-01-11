@@ -1,16 +1,17 @@
+import faker from 'faker'
 import MockDate from 'mockdate'
-import { AddSurveyController } from '@/presentation/controllers'
-import { HttpRequest } from '../protocols'
 import { badRequest, serverError, noContent } from '@/presentation/helpers/http/http-helper'
-import { throwError } from '@/../tests/domain/mocks'
-import { ValidationSpy, AddSurveySpy } from '@/../tests/presentation/mocks'
+import { AddSurveyController } from '@/presentation/controllers'
+import { HttpRequest } from '@/presentation/protocols'
+import { ValidationSpy, AddSurveySpy } from '@/tests/presentation/mocks'
+import { throwError } from '@/tests/domain/mocks'
 
 const mockRequest = (): HttpRequest => ({
   body: {
-    question: 'any_question',
+    question: faker.random.words(),
     answers: [{
-      image: 'any_image',
-      answer: 'any_answer'
+      image: faker.image.imageUrl(),
+      answer: faker.random.words()
     }],
     date: new Date()
   }
@@ -44,10 +45,9 @@ describe('AddSurvey Controller', () => {
 
   it('Should call Validation with correct values', async () => {
     const { sut, validationSpy } = makeSut()
-    const validateSpy = jest.spyOn(validationSpy, 'validate')
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
-    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+    expect(validationSpy.input).toBe(httpRequest.body)
   })
 
   it('Should return 400 if Validation fails', async () => {

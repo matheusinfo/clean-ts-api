@@ -1,6 +1,7 @@
-import { Collection } from 'mongodb'
-import { sign } from 'jsonwebtoken'
+import faker from 'faker'
 import request from 'supertest'
+import { sign } from 'jsonwebtoken'
+import { Collection } from 'mongodb'
 import env from '@/main/config/env'
 import app from '@/main/config/app'
 import { MongoHelper } from '@/infra/db/mongodb'
@@ -66,12 +67,12 @@ describe('Login Routes', () => {
         .post('/api/surveys')
         .set('x-access-token', accessToken)
         .send({
-          question: 'Question',
+          question: faker.random.words(),
           answers: [{
-            answer: 'Answer 1',
-            image: 'http://image-name.com'
+            answer: faker.random.word(),
+            image: faker.image.imageUrl()
           }, {
-            answer: 'Answer 2'
+            answer: faker.random.word()
           }]
         })
         .expect(204)

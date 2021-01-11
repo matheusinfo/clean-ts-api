@@ -1,13 +1,14 @@
-import { LoginController } from '@/presentation/controllers'
+import faker from 'faker'
 import { badRequest, serverError, success, unauthorized } from '@/presentation/helpers/http/http-helper'
-import { AuthenticationSpy, ValidationSpy } from '@/../tests/presentation/mocks'
-import { throwError } from '@/../tests/domain/mocks'
-import { HttpRequest } from '../protocols'
+import { LoginController } from '@/presentation/controllers'
+import { HttpRequest } from '@/presentation/protocols'
+import { AuthenticationSpy, ValidationSpy } from '@/tests/presentation/mocks'
+import { throwError } from '@/tests/domain/mocks'
 
 const mockRequest = (): HttpRequest => ({
   body: {
-    email: 'any_email@mail.com',
-    password: 'any_password'
+    email,
+    password
   }
 })
 
@@ -28,15 +29,23 @@ const makeSut = (): SutTypes => {
   }
 }
 
+let email: string
+let password: string
+
 describe('Login Controller', () => {
+  beforeEach(() => {
+    email = faker.internet.email()
+    password = faker.internet.password()
+  })
+
   it('Should call Authentication with correct values', async () => {
     const { sut, authenticationSpy } = makeSut()
     const authSpy = jest.spyOn(authenticationSpy, 'auth')
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
     expect(authSpy).toHaveBeenCalledWith({
-      email: 'any_email@mail.com',
-      password: 'any_password'
+      email,
+      password
     })
   })
 

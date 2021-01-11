@@ -1,6 +1,7 @@
-import { ValidationComposite } from '@/validation/validators'
+import faker from 'faker'
 import { InvalidParamError, MissingParamError } from '@/presentation/errors'
-import { ValidationSpy } from '../../presentation/mocks'
+import { ValidationComposite } from '@/validation/validators'
+import { ValidationSpy } from '@/tests/presentation/mocks'
 
 type SutTypes = {
   sut: ValidationComposite
@@ -16,11 +17,17 @@ const makeSut = (): SutTypes => {
   }
 }
 
+let value: string
+
 describe('Validation Composite', () => {
+  beforeEach(() => {
+    value = faker.random.uuid()
+  })
+
   it('Should return an error if any validation fails', () => {
     const { sut, validationSpys } = makeSut()
     jest.spyOn(validationSpys[0], 'validate').mockReturnValueOnce(new MissingParamError('field'))
-    const error = sut.validate({ field: 'any_value' })
+    const error = sut.validate({ field: value })
     expect(error).toEqual(new MissingParamError('field'))
   })
 
@@ -28,7 +35,7 @@ describe('Validation Composite', () => {
     const { sut, validationSpys } = makeSut()
     jest.spyOn(validationSpys[0], 'validate').mockReturnValueOnce(new MissingParamError('field'))
     jest.spyOn(validationSpys[1], 'validate').mockReturnValueOnce(new InvalidParamError('field'))
-    const error = sut.validate({ field: 'any_value' })
+    const error = sut.validate({ field: value })
     expect(error).toEqual(new MissingParamError('field'))
   })
 

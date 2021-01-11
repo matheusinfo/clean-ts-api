@@ -1,9 +1,9 @@
 import faker from 'faker'
-import { LogControllerDecorator } from '../../../src/main/decorators/log-controller-decorator'
+import { LogControllerDecorator } from '@/main/decorators/log-controller-decorator'
 import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
 import { serverError, success } from '@/presentation/helpers/http/http-helper'
-import { mockAccountModel } from '@/../tests/domain/mocks'
-import { LogErrorRepositorySpy } from '@/../tests/data/mocks'
+import { LogErrorRepositorySpy } from '@/tests/data/mocks'
+import { mockAccountModel } from '@/tests/domain/mocks'
 
 class ControllerSpy implements Controller {
   httpResponse = success(mockAccountModel())

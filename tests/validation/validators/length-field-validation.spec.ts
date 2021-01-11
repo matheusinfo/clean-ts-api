@@ -1,5 +1,5 @@
-import { LengthField } from '@/validation/validators'
 import { LengthError } from '@/presentation/errors'
+import { LengthField } from '@/validation/validators'
 
 const makeSut = (): LengthField => {
   return new LengthField('password')

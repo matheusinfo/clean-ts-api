@@ -1,13 +1,14 @@
-import { AuthMiddleware } from '@/presentation/middlewares'
+import faker from 'faker'
 import { forbidden, serverError, success } from '@/presentation/helpers/http/http-helper'
+import { HttpRequest } from '@/presentation/protocols'
+import { AuthMiddleware } from '@/presentation/middlewares'
 import { AccessDeniedError } from '@/presentation/errors'
-import { throwError } from '@/../tests/domain/mocks'
-import { LoadAccountByTokenSpy } from '@/../tests/presentation/mocks'
-import { HttpRequest } from '../protocols'
+import { LoadAccountByTokenSpy } from '@/tests/presentation/mocks'
+import { throwError } from '@/tests/domain/mocks'
 
 const mockRequest = (): HttpRequest => ({
   headers: {
-    'x-access-token': 'any_token'
+    'x-access-token': token
   }
 })
 
@@ -25,7 +26,13 @@ const makeSut = (role?: string): SutTypes => {
   }
 }
 
+let token: string
+
 describe('Auth Middleware', () => {
+  beforeEach(() => {
+    token = faker.random.uuid()
+  })
+
   it('Should return 403 if no x-access-token exists in headers', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({})
@@ -46,7 +53,7 @@ describe('Auth Middleware', () => {
     const loadSpy = jest.spyOn(loadAccountByTokenSpy, 'load')
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
-    expect(loadSpy).toHaveBeenCalledWith('any_token', role)
+    expect(loadSpy).toHaveBeenCalledWith(token, role)
   })
 
   it('Should return 200 if LoadAccountByToken returns an account', async () => {
