@@ -1,6 +1,6 @@
-import { mockAccountModel } from '@/../tests/domain/mocks'
+import { mockAccountModel } from '@/tests/domain/mocks'
 import { LoadAccountByToken } from '@/domain/usecases'
-import { AccountModel } from '../controllers/signup-controller-protocols'
+import { AccountModel } from '@/domain/models'
 
 export class LoadAccountByTokenSpy implements LoadAccountByToken {
   accountModel = mockAccountModel()
