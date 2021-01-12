@@ -64,7 +64,7 @@ describe('SignUp Controlller', () => {
 
   it('Should return 403 if email already exists', async () => {
     const { sut, addAccountSpy } = makeSut()
-    jest.spyOn(addAccountSpy, 'add').mockReturnValueOnce(null)
+    addAccountSpy.isValid = null
     const request = mockRequest()
     const httpResponse = await sut.handle(request)
     expect(httpResponse).toEqual(forbidden(new EmailInUseError()))
