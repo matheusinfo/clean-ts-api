@@ -1,9 +1,9 @@
-import { AddSurvey, AddSurveyParams } from '@/domain/usecases'
+import { AddSurvey } from '@/domain/usecases'
 
 export class AddSurveySpy implements AddSurvey {
-  surveyParams: AddSurveyParams
+  surveyParams: AddSurvey.Params
 
-  async add (data: AddSurveyParams): Promise<void> {
+  async add (data: AddSurvey.Params): Promise<void> {
     this.surveyParams = data
   }
 }
