@@ -1,6 +1,5 @@
 import faker from 'faker'
-import { AuthenticationParams, Authentication } from '@/domain/usecases/authentication'
-import { AuthenticationModel } from '@/domain/models/authentication'
+import { Authentication } from '@/domain/usecases/authentication'
 
 export class AuthenticationSpy implements Authentication {
   authenticationModel = {
@@ -8,9 +7,9 @@ export class AuthenticationSpy implements Authentication {
     name: faker.name.findName()
   }
 
-  authenticationParams: AuthenticationParams
+  authenticationParams: Authentication.Params
 
-  async auth (authentication: AuthenticationParams): Promise<AuthenticationModel> {
+  async auth (authentication: Authentication.Params): Promise<Authentication.Result> {
     this.authenticationParams = authentication
     return this.authenticationModel
   }
