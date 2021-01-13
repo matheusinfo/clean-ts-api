@@ -1,20 +1,19 @@
 import { Collection } from 'mongodb'
 import { MongoHelper, SurveyMongoRepository } from '@/infra/db/mongodb'
-import { AccountModel } from '@/domain/models/account'
 import { mockAddSurveyParams } from '@/tests/domain/mocks'
 
 let surveyCollection: Collection
 let accountCollection: Collection
 let surveyResultCollection: Collection
 
-const mockAccount = async (): Promise<AccountModel> => {
+const mockAccountId = async (): Promise<string> => {
   const result = await accountCollection.insertOne({
     name: 'any_name',
     email: 'any_email@mail.com',
     password: 'any_password',
     confirmPassword: 'any_password'
   })
-  return MongoHelper.mapper(result.ops[0])
+  return result.ops[0]._id
 }
 
 const makeSut = (): SurveyMongoRepository => {
@@ -60,18 +59,18 @@ describe('Account Mongo Repository', () => {
 
   describe('LOAD ALL()', () => {
     it('Should loadAll surveys on success', async () => {
-      const account = await mockAccount()
+      const account = await mockAccountId()
       const addSurveyModels = [mockAddSurveyParams(), mockAddSurveyParams()]
       const result = await surveyCollection.insertMany(addSurveyModels)
       const survey = result.ops[0]
       await surveyResultCollection.insertOne({
         surveyId: survey._id,
-        accountId: account.id,
+        accountId: account,
         anser: survey.answers[0].answer,
         date: new Date()
       })
       const sut = makeSut()
-      const surveys = await sut.loadAll(account.id)
+      const surveys = await sut.loadAll(account)
       expect(surveys.length).toBe(2)
       expect(surveys[0].id).toBeTruthy()
       expect(surveys[0].question).toBe(addSurveyModels[0].question)
@@ -81,9 +80,9 @@ describe('Account Mongo Repository', () => {
     })
 
     it('Should load a empty list', async () => {
-      const account = await mockAccount()
+      const account = await mockAccountId()
       const sut = makeSut()
-      const surveys = await sut.loadAll(account.id)
+      const surveys = await sut.loadAll(account)
       expect(surveys.length).toBe(0)
     })
   })
