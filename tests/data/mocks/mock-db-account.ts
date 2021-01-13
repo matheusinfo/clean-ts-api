@@ -6,12 +6,12 @@ import { mockAccountModel } from '@/../tests/domain/mocks'
 import { AccountModel } from '@/domain/models/account'
 
 export class AddAccountRepositorySpy implements AddAccountRepository {
-  accountModel = mockAccountModel()
   addAccountParams: AddAccountRepository.Params
+  result = true
 
   async add (accountData: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
     this.addAccountParams = accountData
-    return this.accountModel
+    return this.result
   }
 }
 
@@ -30,7 +30,7 @@ export class LoadAccountByTokenRepositorySpy implements LoadAccountByTokenReposi
   token: string
   role: string
 
-  async loadByToken (token: string, role?: string): Promise<AccountModel> {
+  async loadByToken (token: string, role?: string): Promise<LoadAccountByTokenRepository.Result> {
     this.token = token
     this.role = role
     return this.accountModel
