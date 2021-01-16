@@ -5,6 +5,10 @@ export default gql`
         surveys: [Survey!]! @auth
     }
 
+    extend type Mutation {
+        addSurvey (question: String!, answers: [Answers!]!): Boolean @auth
+    }
+
     type SurveyAnswer {
         answer: String!
         image: String
@@ -16,5 +20,10 @@ export default gql`
         answers: [SurveyAnswer!]!
         date: DateTime
         didAnswer: Boolean
+    }
+
+    input Answers {
+        answer: String!
+        image: String
     }
 `
