@@ -29,7 +29,7 @@ let accountCollection: Collection
 let surveyCollection: Collection
 let apolloServer: ApolloServer
 
-describe('Login GraphQL', () => {
+describe('Surveys GraphQL', () => {
   beforeEach(async () => {
     accountCollection = await MongoHelper.getCollection('accounts')
     surveyCollection = await MongoHelper.getCollection('surveys')
@@ -114,6 +114,52 @@ describe('Login GraphQL', () => {
       const res: any = await query(surveysQuery)
       expect(res.data).toBeFalsy()
       expect(res.errors[0].message).toBe('Access denied')
+    })
+  })
+
+  describe('Add Survey Mutation', () => {
+    const addSurveyMutate = gql`
+      mutation addSurvey($question: String!, $answers: [Answers!]!){
+          addSurvey (question: $question, answers: $answers)
+      }
+    `
+
+    it('Should add a Survey on success', async () => {
+      const accessToken = await mockAccessToken()
+      const { mutate } = createTestClient({
+        apolloServer,
+        extendMockRequest: {
+          headers: {
+            'x-access-token': accessToken
+          }
+        }
+      })
+      const res: any = await mutate(addSurveyMutate, {
+        variables: {
+          question: 'Question',
+          answers: [{
+            answer: 'Answer 1'
+          }, {
+            answer: 'Answer 2'
+          }]
+        }
+      })
+      expect(res.data).toEqual({ addSurvey: null })
+    })
+
+    it('Should return AccessDeniedError if no token is provided', async () => {
+      const { mutate } = createTestClient({ apolloServer })
+      const res: any = await mutate(addSurveyMutate, {
+        variables: {
+          question: 'Question',
+          answers: [{
+            answer: 'Answer 1'
+          }, {
+            answer: 'Answer 2'
+          }]
+        }
+      })
+      expect(res.data).toEqual({ addSurvey: null })
     })
   })
 })

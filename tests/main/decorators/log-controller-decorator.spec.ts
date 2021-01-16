@@ -49,7 +49,7 @@ const makeSut = (): SutTypes => {
   }
 }
 
-describe('LogController Decorator', async () => {
+describe('LogController Decorator', () => {
   it('Should call controller handle', async () => {
     const { sut, controllerSpy } = makeSut()
     const request = mockRequest()
