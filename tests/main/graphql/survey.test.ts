@@ -134,7 +134,7 @@ describe('Surveys GraphQL', () => {
           }
         }
       })
-      const res: any = await mutate(addSurveyMutate, {
+      await mutate(addSurveyMutate, {
         variables: {
           question: 'Question',
           answers: [{
@@ -144,7 +144,8 @@ describe('Surveys GraphQL', () => {
           }]
         }
       })
-      expect(res.data).toEqual({ addSurvey: null })
+      const survey = (await surveyCollection.find().toArray())
+      expect(survey.length).toBe(1)
     })
 
     it('Should return AccessDeniedError if no token is provided', async () => {
