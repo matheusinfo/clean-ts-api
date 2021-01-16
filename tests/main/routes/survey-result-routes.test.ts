@@ -8,7 +8,7 @@ import { MongoHelper } from '@/infra/db/mongodb'
 let accountCollection: Collection
 let surveyCollection: Collection
 
-const makeAccessToken = async (): Promise<string> => {
+const mockAccessToken = async (): Promise<string> => {
   const result = await accountCollection.insertOne({
     name: 'Matheus',
     email: 'matheus@gmail.com',
@@ -54,7 +54,7 @@ describe('Survey Routes', () => {
     })
 
     it('Should return 200 on save survey result with accessToken', async () => {
-      const accessToken = await makeAccessToken()
+      const accessToken = await mockAccessToken()
       const result = await surveyCollection.insertOne({
         question: 'Question',
         answers: [{
@@ -83,7 +83,7 @@ describe('Survey Routes', () => {
     })
 
     it('Should return 200 on load survey result with accessToken', async () => {
-      const accessToken = await makeAccessToken()
+      const accessToken = await mockAccessToken()
       const result = await surveyCollection.insertOne({
         question: 'Question',
         answers: [{

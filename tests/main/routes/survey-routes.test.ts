@@ -9,7 +9,7 @@ import { MongoHelper } from '@/infra/db/mongodb'
 let accountCollection: Collection
 let surveyCollection: Collection
 
-const makeAccessToken = async (): Promise<string> => {
+const mockAccessToken = async (): Promise<string> => {
   const result = await accountCollection.insertOne({
     name: 'Matheus',
     email: 'matheus@gmail.com',
@@ -62,7 +62,7 @@ describe('Login Routes', () => {
     })
 
     it('Should return 204 on add survey success', async () => {
-      const accessToken = await makeAccessToken()
+      const accessToken = await mockAccessToken()
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -87,7 +87,7 @@ describe('Login Routes', () => {
     })
 
     it('Should return 200 on load surveys success with no content', async () => {
-      const accessToken = await makeAccessToken()
+      const accessToken = await mockAccessToken()
       await surveyCollection.insertMany([{
         question: 'any_question',
         answers: [{
@@ -102,7 +102,7 @@ describe('Login Routes', () => {
     })
 
     it('Should return 204 on load surveys success with no content', async () => {
-      const accessToken = await makeAccessToken()
+      const accessToken = await mockAccessToken()
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', accessToken)
