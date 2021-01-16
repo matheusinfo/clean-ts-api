@@ -29,7 +29,7 @@ let accountCollection: Collection
 let surveyCollection: Collection
 let apolloServer: ApolloServer
 
-describe('Surveys GraphQL', () => {
+describe('Survey Result GraphQL', () => {
   beforeEach(async () => {
     accountCollection = await MongoHelper.getCollection('accounts')
     surveyCollection = await MongoHelper.getCollection('surveys')
@@ -46,7 +46,7 @@ describe('Surveys GraphQL', () => {
     await MongoHelper.disconnect()
   })
 
-  describe('Surveys Result Query', () => {
+  describe('Survey Result Query', () => {
     const surveyResultQuery = gql`
         query surveyResult ($surveyId: String!){
             surveyResult (surveyId: $surveyId) {
@@ -123,6 +123,65 @@ describe('Surveys GraphQL', () => {
       })
       expect(res.data).toBeFalsy()
       expect(res.errors[0].message).toBe('Access denied')
+    })
+  })
+
+  describe('SaveSurvey Result Mutation', () => {
+    const saveSurveyResultMutation = gql`
+        mutation saveSurveyResult ($surveyId: String!, $answer: String!){
+            saveSurveyResult (surveyId: $surveyId, answer: $answer) {
+              question
+              answers {
+                answer
+                count
+                percent
+                isCurrentAccountAnswer
+              }
+              date
+            }
+        }
+    `
+
+    it('Should return survey result', async () => {
+      const accessToken = await mockAccessToken()
+      const now = new Date()
+      const surveyRes = await surveyCollection.insertOne({
+        question: 'Question',
+        answers: [{
+          answer: 'Answer 1',
+          image: 'http://image-name.com'
+        }, {
+          answer: 'Answer 2'
+        }],
+        date: now
+      })
+      const { mutate } = createTestClient({
+        apolloServer,
+        extendMockRequest: {
+          headers: {
+            'x-access-token': accessToken
+          }
+        }
+      })
+      const res: any = await mutate(saveSurveyResultMutation, {
+        variables: {
+          surveyId: surveyRes.ops[0]._id.toString(),
+          answer: 'Answer 1'
+        }
+      })
+      expect(res.data.saveSurveyResult.question).toBe('Question')
+      expect(res.data.saveSurveyResult.date).toBe(now.toISOString())
+      expect(res.data.saveSurveyResult.answers).toEqual([{
+        answer: 'Answer 1',
+        count: 1,
+        percent: 100,
+        isCurrentAccountAnswer: true
+      }, {
+        answer: 'Answer 2',
+        count: 0,
+        percent: 0,
+        isCurrentAccountAnswer: false
+      }])
     })
   })
 })

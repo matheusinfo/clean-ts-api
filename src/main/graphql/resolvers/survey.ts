@@ -3,16 +3,16 @@ import { adaptResolver } from '@/main/adapters/apollo/apollo-server-resolver-ada
 
 export default {
   Query: {
-    surveys: async () => {
+    surveys: async (parent: any, args: any, context: any) => {
       const loadSurveysController = makeLoadSurveysController()
-      return adaptResolver(loadSurveysController)
+      return adaptResolver(loadSurveysController, args, context)
     }
   },
 
   Mutation: {
-    addSurvey: async (parent: any, args: any) => {
+    addSurvey: async (parent: any, args: any, context: any) => {
       const addSurveyController = makeAddSurveyController()
-      return adaptResolver(addSurveyController, args)
+      return adaptResolver(addSurveyController, args, context)
     }
   }
 }
