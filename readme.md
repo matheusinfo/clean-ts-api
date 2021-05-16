@@ -59,7 +59,7 @@ O objetivo do treinamento é mostrar como criar uma API com uma arquitetura bem 
 * TDD
 * Clean Architecture
 * DDD
-* Conventional Commits
+* Conventional Commits 
 * GitFlow
 * Modular Design
 * Dependency Diagrams
