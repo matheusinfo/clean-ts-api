@@ -174,4 +174,4 @@ O objetivo do treinamento é mostrar como criar uma API com uma arquitetura bem 
 * ObjectId
 * Upsert e ReturnOriginal
 * Push, Divide, Multiply, ArrayElemAt, Cond, Sum
-* Filter, Map, Reduce, MergeObjects, ConcatArrays
+* Filter, Map, Reduce, MergeObjects and ConcatArrays
